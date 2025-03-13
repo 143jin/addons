@@ -22,7 +22,7 @@
       "type": "Serial"
     },
     "Socket": {
-      "server": "192.168.x.x",
+      "server": "192.168.200.48",
       "port": 8899
     },
     "SocketDevice": {
@@ -36,9 +36,9 @@
     },
     "MQTT": {
       "anonymous": false,
-      "server": "192.168.0.252",
-      "username": "taehun.jeong",
-      "password": "Xognsdlahs1!"
+      "server": "192.168.200.42",
+      "username": "mqtt",
+      "password": "12341234"
     },
     "Wallpad": {
       "light": false,
