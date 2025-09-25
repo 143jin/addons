@@ -227,7 +227,7 @@ optional_info = {'optimistic': 'false'}
 대피공간등.register_command(message_flag = '41', attr_name = 'power', topic_class = 'command_topic', process_func = lambda v: '01' if v =='ON' else '00')
 
 ### 난방 ###
-optional_info = {'modes': ['off', 'heat', 'away', 'hotwater'], 'temp_step': 1.0, 'precision': 1.0, 'min_temp': 5.0, 'max_temp': 45.0, 'send_if_off': 'false'}
+optional_info = {'modes': ['off', 'heat', 'away_mode', 'hotwater'], 'temp_step': 1.0, 'precision': 1.0, 'min_temp': 5.0, 'max_temp': 45.0, 'send_if_off': 'false'}
 거실난방 =  wallpad.add_device(device_name = '거실 난방',   device_id = '36', device_subid = '11', device_class = 'climate', optional_info = optional_info)
 안방난방 =  wallpad.add_device(device_name = '안방 난방',   device_id = '36', device_subid = '12', device_class = 'climate', optional_info = optional_info)
 확장난방 =  wallpad.add_device(device_name = '확장 난방',   device_id = '36', device_subid = '13', device_class = 'climate', optional_info = optional_info)
@@ -249,7 +249,13 @@ for message_flag in ['81', 'C3', 'C4', 'C5', 'C6', 'C7']:
     확장난방.register_status(  message_flag = message_flag, attr_name = 'away_mode', topic_class = 'away_mode_state_topic', regex = r'00[\da-fA-F]{2}([\da-fA-F]{2})[\da-fA-F]{4}[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}', process_func = lambda v: 'ON' if format(int(v, 16), '05b')[2] == '1' else 'OFF')
     제인이방난방.register_status(  message_flag = message_flag, attr_name = 'away_mode', topic_class = 'away_mode_state_topic', regex = r'00[\da-fA-F]{2}([\da-fA-F]{2})[\da-fA-F]{4}[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}', process_func = lambda v: 'ON' if format(int(v, 16), '05b')[1] == '1' else 'OFF')
     팬트리난방.register_status(message_flag = message_flag, attr_name = 'away_mode', topic_class = 'away_mode_state_topic', regex = r'00[\da-fA-F]{2}([\da-fA-F]{2})[\da-fA-F]{4}[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}', process_func = lambda v: 'ON' if format(int(v, 16), '05b')[0] == '1' else 'OFF')
-
+    
+    거실난방.register_status(  message_flag = message_flag, attr_name = 'hotwater', topic_class = 'hotwater_state_topic', regex = r'00[\da-fA-F]{2}[\da-fA-F]{4}([\da-fA-F]{2})[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}', process_func = lambda v: 'ON' if format(int(v, 16), '05b')[4] == '1' else 'OFF')
+    안방난방.register_status(  message_flag = message_flag, attr_name = 'hotwater', topic_class = 'hotwater_state_topic', regex = r'00[\da-fA-F]{2}[\da-fA-F]{4}([\da-fA-F]{2})[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}', process_func = lambda v: 'ON' if format(int(v, 16), '05b')[3] == '1' else 'OFF')
+    확장난방.register_status(  message_flag = message_flag, attr_name = 'hotwater', topic_class = 'hotwater_state_topic', regex = r'00[\da-fA-F]{2}[\da-fA-F]{4}([\da-fA-F]{2})[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}', process_func = lambda v: 'ON' if format(int(v, 16), '05b')[2] == '1' else 'OFF')
+    제인이방난방.register_status(  message_flag = message_flag, attr_name = 'hotwater', topic_class = 'hotwater_state_topic', regex = r'00[\da-fA-F]{2}[\da-fA-F]{4}([\da-fA-F]{2})[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}', process_func = lambda v: 'ON' if format(int(v, 16), '05b')[1] == '1' else 'OFF')
+    팬트리난방.register_status(message_flag = message_flag, attr_name = 'hotwater', topic_class = 'hotwater_state_topic', regex = r'00[\da-fA-F]{2}[\da-fA-F]{4}([\da-fA-F]{2})[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}', process_func = lambda v: 'ON' if format(int(v, 16), '05b')[0] == '1' else 'OFF')
+    
     거실난방.register_status(  message_flag = message_flag, attr_name = 'targettemp',  topic_class ='temperature_state_topic',   regex = r'00[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{4}([\da-fA-F]{2})[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}', process_func = lambda v: int(v, 16) % 128 + int(v, 16) // 128 * 0.5)
     안방난방.register_status(  message_flag = message_flag, attr_name = 'targettemp',  topic_class ='temperature_state_topic',   regex = r'00[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{4}[\da-fA-F]{2}[\da-fA-F]{2}([\da-fA-F]{2})[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}', process_func = lambda v: int(v, 16) % 128 + int(v, 16) // 128 * 0.5)
     확장난방.register_status(  message_flag = message_flag, attr_name = 'targettemp',  topic_class ='temperature_state_topic',   regex = r'00[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{4}[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}([\da-fA-F]{2})[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{2}', process_func = lambda v: int(v, 16) % 128 + int(v, 16) // 128 * 0.5)
@@ -267,22 +273,27 @@ for message_flag in ['81', 'C3', 'C4', 'C5', 'C6', 'C7']:
 거실난방.register_command(message_flag = '43', attr_name = 'power', topic_class = 'mode_command_topic', process_func = lambda v: '01' if v == 'heat' else '00')
 거실난방.register_command(message_flag = '44', attr_name = 'targettemp', topic_class = 'temperature_command_topic', process_func = lambda v: format(int(float(v) // 1 + float(v) % 1 * 128 * 2), '02x'))
 거실난방.register_command(message_flag = '45', attr_name = 'away_mode', topic_class = 'away_mode_command_topic', process_func = lambda v: '01' if v =='ON' else '00')
+거실난방.register_command(message_flag = '47', attr_name = 'hotwater', topic_class = 'hotwater_command_topic', process_func = lambda v: '01' if v =='ON' else '00')
 
 안방난방.register_command(message_flag = '43', attr_name = 'power', topic_class = 'mode_command_topic', process_func = lambda v: '01' if v == 'heat' else '00')
 안방난방.register_command(message_flag = '44', attr_name = 'targettemp', topic_class = 'temperature_command_topic', process_func = lambda v: format(int(float(v) // 1 + float(v) % 1 * 128 * 2), '02x'))
 안방난방.register_command(message_flag = '45', attr_name = 'away_mode', topic_class = 'away_mode_command_topic', process_func = lambda v: '01' if v =='ON' else '00')
+안방난방.register_command(message_flag = '47', attr_name = 'hotwater', topic_class = 'hotwater_command_topic', process_func = lambda v: '01' if v =='ON' else '00')
 
 확장난방.register_command(message_flag = '43', attr_name = 'power', topic_class = 'mode_command_topic', process_func = lambda v: '01' if v == 'heat' else '00')
 확장난방.register_command(message_flag = '44', attr_name = 'targettemp', topic_class = 'temperature_command_topic', process_func = lambda v: format(int(float(v) // 1 + float(v) % 1 * 128 * 2), '02x'))
 확장난방.register_command(message_flag = '45', attr_name = 'away_mode', topic_class = 'away_mode_command_topic', process_func = lambda v: '01' if v =='ON' else '00')
+확장난방.register_command(message_flag = '47', attr_name = 'hotwater', topic_class = 'hotwater_command_topic', process_func = lambda v: '01' if v =='ON' else '00')
 
 제인이방난방.register_command(message_flag = '43', attr_name = 'power', topic_class = 'mode_command_topic', process_func = lambda v: '01' if v == 'heat' else '00') # { 'ON': '01', 'OFF': '00' }
 제인이방난방.register_command(message_flag = '44', attr_name = 'targettemp', topic_class = 'temperature_command_topic', process_func = lambda v: format(int(float(v) // 1 + float(v) % 1 * 128 * 2), '02x'))
 제인이방난방.register_command(message_flag = '45', attr_name = 'away_mode', topic_class = 'away_mode_command_topic', process_func = lambda v: '01' if v =='ON' else '00')
+제인이방난방.register_command(message_flag = '47', attr_name = 'hotwater', topic_class = 'hotwater_command_topic', process_func = lambda v: '01' if v =='ON' else '00')
 
 팬트리난방.register_command(message_flag = '43', attr_name = 'power', topic_class = 'mode_command_topic', process_func = lambda v: '01' if v == 'heat' else '00') # , { 'ON': '01', 'OFF': '00' }
 팬트리난방.register_command(message_flag = '44', attr_name = 'targettemp', topic_class = 'temperature_command_topic', process_func = lambda v: format(int(float(v) // 1 + float(v) % 1 * 128 * 2), '02x'))
 팬트리난방.register_command(message_flag = '45', attr_name = 'away_mode', topic_class = 'away_mode_command_topic', process_func = lambda v: '01' if v =='ON' else '00')
+팬트리난방.register_command(message_flag = '47', attr_name = 'hotwater', topic_class = 'hotwater_command_topic', process_func = lambda v: '01' if v =='ON' else '00')
 
 ### 엘리베이터 ###
 # 엘리베이터, 일괄 제어 용도의 패킷이지만 엘리베이터 호출 용도로만 사용해도 무방
