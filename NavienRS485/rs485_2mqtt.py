@@ -160,19 +160,51 @@ packet_2_payload_percentage = {'00': '0', '01': '1', '02': '2', '03': '3'}
 packet_2_payload_oscillation = {'03': 'oscillate_on', '00': 'oscillation_off', '01': 'oscillate_off'}
 
 ### 환풍기 ###
-optional_info = {'optimistic': 'false', 'speed_range_min': 1, 'speed_range_max': 3}
-환풍기 = wallpad.add_device(device_name = '환풍기', device_id = '32', device_subid = '01', device_class = 'fan', optional_info = optional_info)
-환풍기.register_status(message_flag = '01', attr_name = 'availability', topic_class ='availability_topic',      regex = r'()', process_func = lambda v: 'online')
-환풍기.register_status(message_flag = '81', attr_name = 'power',        topic_class ='state_topic',             regex = r'00(0[01])0[0-3]0[013]00', process_func = lambda v: 'ON' if v == '01' else 'OFF')
-환풍기.register_status(message_flag = 'c1', attr_name = 'power',        topic_class ='state_topic',             regex = r'00(0[01])0[0-3]0[013]00', process_func = lambda v: 'ON' if v == '01' else 'OFF')
-환풍기.register_status(message_flag = '81', attr_name = 'percentage',   topic_class ='percentage_state_topic',  regex = r'000[01](0[0-3])0[013]00', process_func = lambda v: packet_2_payload_percentage[v])
-환풍기.register_status(message_flag = 'c2', attr_name = 'percentage',   topic_class ='percentage_state_topic',  regex = r'000[01](0[0-3])0[013]00', process_func = lambda v: packet_2_payload_percentage[v])
-환풍기.register_status(message_flag = '81', attr_name = 'heat',         topic_class ='oscillation_state_topic', regex = r'000[01]0[0-3](0[013])00', process_func = lambda v: packet_2_payload_oscillation[v])
-환풍기.register_status(message_flag = 'c3', attr_name = 'heat',         topic_class ='oscillation_state_topic', regex = r'000[01]0[0-3](0[013])00', process_func = lambda v: packet_2_payload_oscillation[v])
+#optional_info = {'optimistic': 'false', 'speed_range_min': 1, 'speed_range_max': 3}
+#환풍기 = wallpad.add_device(device_name = '환풍기', device_id = '32', device_subid = '01', device_class = 'fan', optional_info = optional_info)
+#환풍기.register_status(message_flag = '01', attr_name = 'availability', topic_class ='availability_topic',      regex = r'()', process_func = lambda v: 'online')
+#환풍기.register_status(message_flag = '81', attr_name = 'power',        topic_class ='state_topic',             regex = r'00(0[01])0[0-3]0[013]00', process_func = lambda v: 'ON' if v == '01' else 'OFF')
+#환풍기.register_status(message_flag = 'c1', attr_name = 'power',        topic_class ='state_topic',             regex = r'00(0[01])0[0-3]0[013]00', process_func = lambda v: 'ON' if v == '01' else 'OFF')
+#환풍기.register_status(message_flag = '81', attr_name = 'percentage',   topic_class ='percentage_state_topic',  regex = r'000[01](0[0-3])0[013]00', process_func = lambda v: packet_2_payload_percentage[v])
+#환풍기.register_status(message_flag = 'c2', attr_name = 'percentage',   topic_class ='percentage_state_topic',  regex = r'000[01](0[0-3])0[013]00', process_func = lambda v: packet_2_payload_percentage[v])
+#환풍기.register_status(message_flag = '81', attr_name = 'heat',         topic_class ='oscillation_state_topic', regex = r'000[01]0[0-3](0[013])00', process_func = lambda v: packet_2_payload_oscillation[v])
+#환풍기.register_status(message_flag = 'c3', attr_name = 'heat',         topic_class ='oscillation_state_topic', regex = r'000[01]0[0-3](0[013])00', process_func = lambda v: packet_2_payload_oscillation[v])
 
-환풍기.register_command(message_flag = '41', attr_name = 'power',       topic_class = 'command_topic', process_func = lambda v: '01' if v =='ON' else '00')
-환풍기.register_command(message_flag = '42', attr_name = 'percentage',  topic_class = 'percentage_command_topic', process_func = lambda v: {payload: packet for packet, payload in packet_2_payload_percentage.items()}[v])
-환풍기.register_command(message_flag = '43', attr_name = 'heat',        topic_class = 'oscillation_command_topic', process_func = lambda v: {payload: packet for packet, payload in packet_2_payload_oscillation.items()}[v])
+#환풍기.register_command(message_flag = '41', attr_name = 'power',       topic_class = 'command_topic', process_func = lambda v: '01' if v =='ON' else '00')
+#환풍기.register_command(message_flag = '42', attr_name = 'percentage',  topic_class = 'percentage_command_topic', process_func = lambda v: {payload: packet for packet, payload in packet_2_payload_percentage.items()}[v])
+#환풍기.register_command(message_flag = '43', attr_name = 'heat',        topic_class = 'oscillation_command_topic', process_func = lambda v: {payload: packet for packet, payload in packet_2_payload_oscillation.items()}[v])
+### 환풍기 수정중-정상작동시 위 162~175까지 삭제할것###
+optional_info = {'optimistic': 'false', 'speed_range_min': 1, 'speed_range_max': 3}
+
+packet_2_payload_percentage = {'01': '약', '02': '중', '03': '강'}
+
+packet_2_payload_preset = {'01': '바이패스', '04': '자동', '05': '공기청정'}
+
+환풍기 = wallpad.add_device(device_name='환풍기', device_id='32', device_subid='01' device_class='fan', optional_info = optional_info)
+
+# 상태 등록
+환풍기.register_status(message_flag='01', attr_name='availability', topic_class='availability_topic', regex=r'()', process_func=lambda v: 'online')
+
+환풍기.register_status(message_flag='81', attr_name='power', topic_class='state_topic', regex=r'00(0[01])0[0-3]0[013]00', process_func=lambda v: 'ON' if v == '01' else 'OFF')
+
+환풍기.register_status(message_flag='c1', attr_name='power', topic_class='state_topic', regex=r'00(0[01])0[0-3]0[013]00', process_func=lambda v: 'ON' if v == '01' else 'OFF')
+
+환풍기.register_status(message_flag='81', attr_name='percentage', topic_class='percentage_state_topic', regex=r'000[01](0[0-3])0[013]00', process_func=lambda v: packet_2_payload_percentage[v])
+
+환풍기.register_status(message_flag='c2', attr_name='percentage', topic_class='percentage_state_topic', regex=r'000[01](0[0-3])0[013]00', process_func=lambda v: packet_2_payload_percentage[v])
+
+# 프리셋 모드 상태 등록
+환풍기.register_status(message_flag='43', attr_name='preset_mode', topic_class='preset_mode_state_topic', regex=r'F7 32 01 43 01 (0[1,4,5])', process_func=lambda v: packet_2_payload_preset[v])
+
+# 명령 등록
+환풍기.register_command(message_flag='41', attr_name='power', topic_class='command_topic', process_func=lambda v: '01' if v == 'ON' else '00')
+
+환풍기.register_command(message_flag='42', attr_name='percentage', topic_class='percentage_command_topic', process_func=lambda v: {payload: packet for packet, payload in packet_2_payload_percentage.items()}[v])
+
+환풍기.register_command(message_flag='43', attr_name='preset_mode', topic_class='preset_mode_command_topic', process_func=lambda v: {payload: packet for packet, payload in packet_2_payload_preset.items()}[v])
+
+# UI 구성
+환풍기.entity_config = {'friendly_name': '환풍기', 'icon': 'mdi:air-filter', 'supported_features': ['percentage', 'preset_mode']}
 
 ### 가스차단기 ###
 optional_info = {'optimistic': 'false'}
