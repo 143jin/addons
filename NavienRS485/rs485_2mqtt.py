@@ -235,13 +235,8 @@ optional_info = {'optimistic': 'false'}
 ### 난방 ###
 # UI에 보일 모드: 'off','heat','외출','온수' 로 표시됩니다.
 optional_info = {
-    'modes': ['off', 'heat', '외출', '온수'],
-    'temp_step': 1.0,
-    'precision': 1.0,
-    'min_temp': 5.0,
-    'max_temp': 45.0,
-    'send_if_off': 'false'
-}
+    'modes': ['off', 'heat', '외출', '온수'], 'temp_step': 1.0, 'precision': 1.0, 'min_temp': 5.0, 'max_temp': 45.0, 'send_if_off': 'false'}
+
 거실난방 =  wallpad.add_device(device_name = '거실 난방',   device_id = '36', device_subid = '11', device_class = 'climate', optional_info = optional_info)
 안방난방 =  wallpad.add_device(device_name = '안방 난방',   device_id = '36', device_subid = '12', device_class = 'climate', optional_info = optional_info)
 확장난방 =  wallpad.add_device(device_name = '확장 난방',   device_id = '36', device_subid = '13', device_class = 'climate', optional_info = optional_info)
@@ -257,8 +252,8 @@ _mode_rev_map = {
     '00': 'off',
     '01': 'heat',
     # 아래 값들은 예시입니다. 실제 기기에서 오는 값에 맞게 수정하세요.
-    '02': '외출',   # dry 에 대응하여 HA에 '외출'로 표시
-    '03': '온수'    # fan_only 에 대응하여 HA에 '온수'로 표시
+    '01': '외출',   # dry 에 대응하여 HA에 '외출'로 표시
+    '01': '온수'    # fan_only 에 대응하여 HA에 '온수'로 표시
 }
 
 def _hex_to_temp(v):
@@ -279,115 +274,25 @@ def _temp_to_hex(v):
 # 상태(기기 -> HA): mode, targettemp, currenttemp
 for message_flag in ['81', 'C3', 'C4', 'C5', 'C6', 'C7']:
     # mode 상태를 하나의 mode_state_topic으로 publish
-    거실난방.register_status(
-        message_flag = message_flag,
-        attr_name = 'mode',
-        topic_class = 'mode_state_topic',
-        regex = r'00[\da-fA-F]{2}([\da-fA-F]{2})[\da-fA-F]{4}[\da-fA-F]{2}.*',
-        process_func = lambda v, m=_mode_rev_map: m.get(v.lower(), 'off')
-    )
-    안방난방.register_status(
-        message_flag = message_flag,
-        attr_name = 'mode',
-        topic_class = 'mode_state_topic',
-        regex = r'00[\da-fA-F]{2}([\da-fA-F]{2})[\da-fA-F]{4}[\da-fA-F]{2}.*',
-        process_func = lambda v, m=_mode_rev_map: m.get(v.lower(), 'off')
-    )
-    확장난방.register_status(
-        message_flag = message_flag,
-        attr_name = 'mode',
-        topic_class = 'mode_state_topic',
-        regex = r'00[\da-fA-F]{2}([\da-fA-F]{2})[\da-fA-F]{4}[\da-fA-F]{2}.*',
-        process_func = lambda v, m=_mode_rev_map: m.get(v.lower(), 'off')
-    )
-    제인이방난방.register_status(
-        message_flag = message_flag,
-        attr_name = 'mode',
-        topic_class = 'mode_state_topic',
-        regex = r'00[\da-fA-F]{2}([\da-fA-F]{2})[\da-fA-F]{4}[\da-fA-F]{2}.*',
-        process_func = lambda v, m=_mode_rev_map: m.get(v.lower(), 'off')
-    )
-    팬트리난방.register_status(
-        message_flag = message_flag,
-        attr_name = 'mode',
-        topic_class = 'mode_state_topic',
-        regex = r'00[\da-fA-F]{2}([\da-fA-F]{2})[\da-fA-F]{4}[\da-fA-F]{2}.*',
-        process_func = lambda v, m=_mode_rev_map: m.get(v.lower(), 'off')
-    )
+    거실난방.register_status(message_flag = message_flag, attr_name = 'mode', topic_class = 'mode_state_topic', regex = r'00[\da-fA-F]{2}([\da-fA-F]{2})[\da-fA-F]{4}[\da-fA-F]{2}.*', process_func = lambda v, m=_mode_rev_map: m.get(v.lower(), 'off'))
+    안방난방.register_status(message_flag = message_flag, attr_name = 'mode', topic_class = 'mode_state_topic', regex = r'00[\da-fA-F]{2}([\da-fA-F]{2})[\da-fA-F]{4}[\da-fA-F]{2}.*', process_func = lambda v, m=_mode_rev_map: m.get(v.lower(), 'off'))
+    확장난방.register_status(message_flag = message_flag, attr_name = 'mode', topic_class = 'mode_state_topic', regex = r'00[\da-fA-F]{2}([\da-fA-F]{2})[\da-fA-F]{4}[\da-fA-F]{2}.*', process_func = lambda v, m=_mode_rev_map: m.get(v.lower(), 'off'))
+    제인이방난방.register_status(message_flag = message_flag, attr_name = 'mode', topic_class = 'mode_state_topic', regex = r'00[\da-fA-F]{2}([\da-fA-F]{2})[\da-fA-F]{4}[\da-fA-F]{2}.*', process_func = lambda v, m=_mode_rev_map: m.get(v.lower(), 'off'))
+    팬트리난방.register_status(message_flag = message_flag, attr_name = 'mode', topic_class = 'mode_state_topic', regex = r'00[\da-fA-F]{2}([\da-fA-F]{2})[\da-fA-F]{4}[\da-fA-F]{2}.*', process_func = lambda v, m=_mode_rev_map: m.get(v.lower(), 'off'))
 
     # target temperature state
-    거실난방.register_status(
-        message_flag = message_flag,
-        attr_name = 'targettemp',
-        topic_class = 'temperature_state_topic',
-        regex = r'00[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{4}([\da-fA-F]{2}).*',
-        process_func = lambda v: _hex_to_temp(v)
-    )
-    안방난방.register_status(
-        message_flag = message_flag,
-        attr_name = 'targettemp',
-        topic_class = 'temperature_state_topic',
-        regex = r'00[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{4}([\da-fA-F]{2}).*',
-        process_func = lambda v: _hex_to_temp(v)
-    )
-    확장난방.register_status(
-        message_flag = message_flag,
-        attr_name = 'targettemp',
-        topic_class = 'temperature_state_topic',
-        regex = r'00[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{4}([\da-fA-F]{2}).*',
-        process_func = lambda v: _hex_to_temp(v)
-    )
-    제인이방난방.register_status(
-        message_flag = message_flag,
-        attr_name = 'targettemp',
-        topic_class = 'temperature_state_topic',
-        regex = r'00[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{4}([\da-fA-F]{2}).*',
-        process_func = lambda v: _hex_to_temp(v)
-    )
-    팬트리난방.register_status(
-        message_flag = message_flag,
-        attr_name = 'targettemp',
-        topic_class = 'temperature_state_topic',
-        regex = r'00[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{4}([\da-fA-F]{2}).*',
-        process_func = lambda v: _hex_to_temp(v)
-    )
+    거실난방.register_status(message_flag = message_flag, attr_name = 'targettemp', topic_class = 'temperature_state_topic', regex = r'00[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{4}([\da-fA-F]{2}).*', process_func = lambda v: _hex_to_temp(v))
+    안방난방.register_status(message_flag = message_flag, attr_name = 'targettemp', topic_class = 'temperature_state_topic', regex = r'00[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{4}([\da-fA-F]{2}).*', process_func = lambda v: _hex_to_temp(v))
+    확장난방.register_status(message_flag = message_flag, attr_name = 'targettemp', topic_class = 'temperature_state_topic', regex = r'00[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{4}([\da-fA-F]{2}).*', process_func = lambda v: _hex_to_temp(v))
+    제인이방난방.register_status(message_flag = message_flag, attr_name = 'targettemp', topic_class = 'temperature_state_topic', regex = r'00[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{4}([\da-fA-F]{2}).*', process_func = lambda v: _hex_to_temp(v))
+    팬트리난방.register_status(message_flag = message_flag, attr_name = 'targettemp', topic_class = 'temperature_state_topic', regex = r'00[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{4}([\da-fA-F]{2}).*', process_func = lambda v: _hex_to_temp(v))
 
     # current temperature state
-    거실난방.register_status(
-        message_flag = message_flag,
-        attr_name = 'currenttemp',
-        topic_class = 'current_temperature_topic',
-        regex = r'00[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{4}[\da-fA-F]{2}([\da-fA-F]{2}).*',
-        process_func = lambda v: _hex_to_temp(v)
-    )
-    안방난방.register_status(
-        message_flag = message_flag,
-        attr_name = 'currenttemp',
-        topic_class = 'current_temperature_topic',
-        regex = r'00[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{4}[\da-fA-F]{2}([\da-fA-F]{2}).*',
-        process_func = lambda v: _hex_to_temp(v)
-    )
-    확장난방.register_status(
-        message_flag = message_flag,
-        attr_name = 'currenttemp',
-        topic_class = 'current_temperature_topic',
-        regex = r'00[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{4}[\da-fA-F]{2}([\da-fA-F]{2}).*',
-        process_func = lambda v: _hex_to_temp(v)
-    )
-    제인이방난방.register_status(
-        message_flag = message_flag,
-        attr_name = 'currenttemp',
-        topic_class = 'current_temperature_topic',
-        regex = r'00[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{4}[\da-fA-F]{2}([\da-fA-F]{2}).*',
-        process_func = lambda v: _hex_to_temp(v)
-    )
-    팬트리난방.register_status(
-        message_flag = message_flag,
-        attr_name = 'currenttemp',
-        topic_class = 'current_temperature_topic',
-        regex = r'00[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{4}[\da-fA-F]{2}([\da-fA-F]{2}).*',
-        process_func = lambda v: _hex_to_temp(v)
-    )
+    거실난방.register_status(message_flag = message_flag, attr_name = 'currenttemp', topic_class = 'current_temperature_topic', regex = r'00[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{4}[\da-fA-F]{2}([\da-fA-F]{2}).*', process_func = lambda v: _hex_to_temp(v))
+    안방난방.register_status(message_flag = message_flag, attr_name = 'currenttemp', topic_class = 'current_temperature_topic', regex = r'00[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{4}[\da-fA-F]{2}([\da-fA-F]{2}).*', process_func = lambda v: _hex_to_temp(v))
+    확장난방.register_status(message_flag = message_flag, attr_name = 'currenttemp', topic_class = 'current_temperature_topic', regex = r'00[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{4}[\da-fA-F]{2}([\da-fA-F]{2}).*', process_func = lambda v: _hex_to_temp(v))
+    제인이방난방.register_status(message_flag = message_flag, attr_name = 'currenttemp', topic_class = 'current_temperature_topic', regex = r'00[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{4}[\da-fA-F]{2}([\da-fA-F]{2}).*', process_func = lambda v: _hex_to_temp(v))
+    팬트리난방.register_status(message_flag = message_flag, attr_name = 'currenttemp', topic_class = 'current_temperature_topic', regex = r'00[\da-fA-F]{2}[\da-fA-F]{2}[\da-fA-F]{4}[\da-fA-F]{2}([\da-fA-F]{2}).*', process_func = lambda v: _hex_to_temp(v))
 
 # mode command 처리: HA에서 '외출'/'온수' 또는 'dry'/'fan_only'를 보내면 기기용 패킷으로 변환
 def mode_process(v):
@@ -396,9 +301,9 @@ def mode_process(v):
         return ('43', '01')   # 난방 켬 (예시)
     if vm in ('off', '꺼짐'):
         return ('43', '00')   # 난방 끔 (예시)
-    if vm in ('외출', 'away', 'dry'):
+    if vm in ('외출', 'dry'):
         return ('45', '01')   # 외출 -> dry 대응 (예시)
-    if vm in ('온수', 'hotwater', 'fan_only'):
+    if vm in ('온수', 'fan_only'):
         return ('47', '01')   # 온수 -> fan_only 대응 (예시)
     return ('43', '00')
 
