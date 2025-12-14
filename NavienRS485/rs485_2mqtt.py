@@ -5,7 +5,7 @@ from functools import reduce
 from collections import defaultdict
 
 MQTT_USERNAME = 'eunj'
-MQTT_PASSWORD = '!Teatime'
+MQTT_PASSWORD = '!T'
 MQTT_SERVER = '192.168.200.68'
 ROOT_TOPIC_NAME = 'rs485_2mqtt'
 HOMEASSISTANT_ROOT_TOPIC_NAME = 'homeassistant'
